@@ -1,14 +1,17 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+	"github.com/gin-gonic/gin"
+	"api-golang/handlers"
+)
 
 func main(){
 	router := gin.Default()
 
-	router.GET("/", func(c *gin.Context){
-		c.JSON(200, gin.H{
-		"message": "Hello word!",
-		})
+	router.GET("/health", func(c *gin.Context){
+		c.JSON(http.StatusOK, gin.H{"status": "OK"})
 	})
+	router.POST("/cadastro-usuario", handlers.CadastrarUsuario)
 	router.Run(":8080")
 }
