@@ -61,11 +61,16 @@ func CadastrarUsuario(c *gin.Context) {
 
 	faixaEtaria := calcularFaixaEtaria(idade)
 
+	cpfFormatado := formatarCPF(user.CPF)
+	telefoneFormatado := formatarTelefone(user.Telefone)
+
 	c.JSON(http.StatusCreated, gin.H{
 		"menssage":         "Usuário cadastrado!",
 		"user":             user,
 		"imc":              imc,
 		"idade":            idade,
+		"cpf":				cpfFormatado,
+		"telefone":			telefoneFormatado,
 		"faixaEtaria":      faixaEtaria,
 		"classificacaoIMC": classificacaoIMC,
 		"nomeCompleto":     nomeCompleto,
@@ -112,4 +117,27 @@ func calcularFaixaEtaria(idade int) string {
 		return "idoso"
 	}
 	return ""
+}
+
+func formatarCPF(cpf string) string {
+	cpfLimpo := strings.ReplaceAll(cpf, ".", "")
+	cpfLimpo = strings.ReplaceAll(cpfLimpo, "-", "")
+	if len(cpfLimpo) != 11 {
+		return cpf
+	}
+	return cpfLimpo[:3] + "." + cpfLimpo[3:6] + "." + cpfLimpo[6:9] + "-" + cpfLimpo[9:]
+}
+
+func formatarTelefone(telefone string) string {
+	telefoneLimpo := strings.ReplaceAll(telefone, "(", "")
+	telefoneLimpo = strings.ReplaceAll(telefoneLimpo, ")", "")
+	telefoneLimpo = strings.ReplaceAll(telefoneLimpo, " ", "")
+	telefoneLimpo = strings.ReplaceAll(telefoneLimpo, "-", "")
+	if len(telefoneLimpo) < 10 || len(telefoneLimpo) > 11 {
+		return telefone
+	}
+	if len(telefoneLimpo) == 10 {
+		return "(" + telefoneLimpo[:2] + ") " + telefoneLimpo[2:6] + "-" + telefoneLimpo[6:]
+	}
+	return "(" + telefoneLimpo[:2] + ") " + telefoneLimpo[2:7] + "-" + telefoneLimpo[7:]
 }
