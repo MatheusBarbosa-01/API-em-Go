@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 	"net/http"
 	"strings"
 	"time"
@@ -64,8 +65,11 @@ func CadastrarUsuario(c *gin.Context) {
 	cpfFormatado := formatarCPF(user.CPF)
 	telefoneFormatado := formatarTelefone(user.Telefone)
 
+	id := uuid.New().String()
+
 	c.JSON(http.StatusCreated, gin.H{
 		"menssage":         "Usuário cadastrado!",
+		"id":				id,
 		"user":             user,
 		"imc":              imc,
 		"idade":            idade,
